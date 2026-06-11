@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>web-1</title>
+        <meta charset=" utf-8">
+        <link rel="stylesheet" href="main.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    </head>
+
+    <body>
+        <div id="toast"> </div>
+        <div class="nut">
+            <div onclick="showSuccessToast();" class="bth bth--success"> Succes</div>
+            <div onclick="showFailToast();" class="bth bth--fail"> Fail</div>                        
+        </div>            
+        <script>
+            //toast funtion
+            function toast({
+                title = '',
+                message = '',
+                type = '',
+                duration = 3000}){
+                    const main  = document.getElementById('toast');
+                    if(main){
+                        const toast = document.createElement('div');
+
+                        const icons = {
+                            success: ' fas fa-solid fa-circle-check',
+                            fail: 'fas fa-solid fa-circle-xmark'
+                        }
+                        const icon = icons[type];
+                        //thời gian delay hay thời gian hiện 
+                        const delay = (duration/1000).toFixed(2);
+                        toast.style.animation = `slideInleft ease 0.5s, fadeout linear 1s ${delay}s forwards`
+                        //thời gian xóa khỏi list chờ (có nghĩa là sau một khoảng thời gian thì xóa nó đi ra khỏi bộ nhớ để nếu có bấm thĩe add một cái mới vào)
+                        const autoRemove = setTimeout(function(){
+                            main.removeChild(toast);
+                        },duration +1000);
+                        // ấn nút xóa
+                        toast.onclick = function(e){
+                            if(e.target.closest('.toast__close')){
+                                main.removeChild(toast);
+                                clearTimeout(autoRemove);// sau khi xóa thì xóa lun cái thời gian hiện tự mất
+                            }
+                        }
+
+                        toast.classList.add('toast', `toast--${type}`);
+                        toast.innerHTML = `
+                            <div class="toast__icon"> 
+                                <i class="f${icon}"></i>
+                            </div>
+                            <div class="toast__body">
+                                <h3 class="toast__title">${title}</h3>
+                                <p class="toast__msg">${message}</p>
+                            </div>
+                            <div class="toast__close">
+                                <i class="fa-solid fa-circle-xmark"></i>
+                            </div>
+                        `;
+                        main.appendChild(toast);
+                        
+                    }
+            }
+
+            function showSuccessToast(){
+                toast({
+                    title:'success',
+                    message: 'anyone with access can view your invited visitor',
+                    type:'success'             
+                })
+            }
+            function showFailToast(){
+                toast({
+                    title:'fail',
+                    message: 'anyone with access can view your invited visitor',
+                    type:'fail'             
+                })
+            }
+
+        </script>
+    </body>
+</html>
